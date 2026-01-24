@@ -1,0 +1,18 @@
+{
+  "name": "CharacterMotor.Editor",
+  "rootNamespace": "CharacterMotor.Editor",
+  "references": [
+    "CharacterMotor.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,25 @@
+{
+  "name": "CharacterMotor.InputSystem",
+  "rootNamespace": "CharacterMotor.InputSystemBridge",
+  "references": [
+    "CharacterMotor.Runtime",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [
+    "CHARACTER_MOTOR_INPUT_SYSTEM"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.inputsystem",
+      "expression": "1.0.0",
+      "define": "CHARACTER_MOTOR_INPUT_SYSTEM"
+    }
+  ],
+  "noEngineReferences": false
+}

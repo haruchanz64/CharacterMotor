@@ -1,0 +1,31 @@
+{
+  "name": "com.haruchanz64.character-motor",
+  "version": "1.0.0",
+  "displayName": "CharacterMotor",
+  "description": "Barebones modular character controller framework for Unity 6 supporting 3D CharacterController, 3D Rigidbody, and 2D Rigidbody2D (Platformer and Top-Down) with pluggable IMotorModule pipelines, camera reference frames, and UI Toolkit debugging.",
+  "unity": "6000.0",
+  "license": "MIT",
+  "keywords": [
+    "character-controller",
+    "movement",
+    "rigidbody",
+    "rigidbody2d",
+    "2d",
+    "3d",
+    "modular",
+    "framework",
+    "ui-toolkit",
+    "unity-tool"
+  ],
+  "author": {
+    "name": "haruchanz64",
+    "url": "https://haruchanz64.github.io"
+  },
+  "samples": [
+    {
+      "displayName": "Custom Modules & Camera Samples",
+      "description": "Example IMotorModule scripts (dash, coyote jump, sprint modifier) and barebones FPS/TPS camera controllers.",
+      "path": "Samples~/CustomModules"
+    }
+  ]
+}

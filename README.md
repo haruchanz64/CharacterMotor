@@ -11,7 +11,7 @@ Barebones modular character controller framework for Unity 6. It provides minima
   - `RigidbodyMotor2D` for 2D `Rigidbody2D` in `Platformer` or `TopDown` mode
 - **Camera and orientation agnostic (`IMovementReferenceFrame`):** 3D motors project planar input against an assignable `ReferenceTransform` (compatible with Cinemachine, a standard `Camera`, or a custom rig) and fall back to `Camera.main` when unassigned. `MotorInput.Look` exposes optional aim/look delta for custom camera scripts.
 - **Pluggable input (`ICharacterInputSource`):** Decouples locomotion from hardware devices so player input, AI agents, replays, or networked inputs drive the same motor via `SetInput`. Includes `LegacyInputSource` and an optional `NewInputSystemSource` enabled via `versionDefines` when `com.unity.inputsystem` is installed.
-- **UI Toolkit inspection:** Includes a UI Toolkit custom inspector (`CharacterMotorInspector`), a Play Mode `MotorDebuggerWindow` (`Tools > CharacterMotor > Motor Debugger`) with live module toggles, and rig creation menus under `GameObject > CharacterMotor`.
+- **UI Toolkit inspection:** Includes a UI Toolkit custom inspector (`CharacterMotorInspector`), a Play Mode `MotorDebuggerWindow` (`Tools > HaruChanZ64 > Gameplay > CharacterMotor > Motor Debugger`) with live module toggles, and rig creation menus under `GameObject > CharacterMotor`.
 
 ## Installation
 

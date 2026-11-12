@@ -21,7 +21,7 @@ namespace CharacterMotor.Editor.UI
         private VisualElement _modulesContainer;
         private int _selectedIndex;
 
-        [MenuItem("Tools/CharacterMotor/Motor Debugger", false, 10)]
+        [MenuItem("Tools/HaruChanZ64/Gameplay/CharacterMotor/Motor Debugger", false, 130)]
         public static void ShowWindow()
         {
             var window = GetWindow<MotorDebuggerWindow>("Motor Debugger");

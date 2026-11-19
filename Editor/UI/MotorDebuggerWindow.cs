@@ -21,6 +21,7 @@ namespace CharacterMotor.Editor.UI
         private VisualElement _modulesContainer;
         private int _selectedIndex;
 
+        /// <summary>Opens or focuses the Motor Debugger Editor window.</summary>
         [MenuItem("Tools/HaruChanZ64/Gameplay/CharacterMotor/Motor Debugger", false, 130)]
         public static void ShowWindow()
         {
@@ -29,6 +30,7 @@ namespace CharacterMotor.Editor.UI
             window.Show();
         }
 
+        /// <summary>Constructs the debugger UI Toolkit layout and starts a 100 ms telemetry refresh loop.</summary>
         public void CreateGUI()
         {
             rootVisualElement.Clear();
@@ -87,6 +89,9 @@ namespace CharacterMotor.Editor.UI
             RefreshView();
         }
 
+        /// <summary>
+        /// Syncs the active motor dropdown, grounding/dimension badges, velocity telemetry, and module toggles with Play Mode state.
+        /// </summary>
         private void RefreshView()
         {
             if (_motorDropdown == null) return;
@@ -135,6 +140,9 @@ namespace CharacterMotor.Editor.UI
             RebuildModuleToggles(motor);
         }
 
+        /// <summary>
+        /// Rebuilds the live enable/disable toggle list for every <see cref="IMotorModule"/> attached to <paramref name="motor"/>.
+        /// </summary>
         private void RebuildModuleToggles(ICharacterMotor motor)
         {
             _modulesContainer.Clear();

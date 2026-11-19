@@ -20,9 +20,16 @@ namespace CharacterMotor.Motors
 
         private Rigidbody _rb;
 
+        /// <inheritdoc/>
         public override MotorDimension Dimension => MotorDimension.Mode3D;
+
+        /// <summary>Underlying Unity <see cref="Rigidbody"/> driven by this motor.</summary>
         public Rigidbody Body => _rb;
 
+        /// <summary>
+        /// Caches the <see cref="Rigidbody"/>, disables built-in gravity and physics rotation so the motor owns them,
+        /// and initializes base state.
+        /// </summary>
         protected override void Awake()
         {
             _rb = GetComponent<Rigidbody>();
@@ -40,6 +47,11 @@ namespace CharacterMotor.Motors
             Step(Time.fixedDeltaTime);
         }
 
+        /// <summary>
+        /// Executes one physics step: reads body velocity, probes ground, solves velocity via <see cref="CharacterMotorBase.Pipeline"/>,
+        /// projects planar motion onto walkable slopes, writes linear velocity, updates rotation, and raises step events.
+        /// </summary>
+        /// <param name="deltaTime">Step duration in seconds (typically <see cref="Time.fixedDeltaTime"/>); non-positive values are ignored.</param>
         public void Step(float deltaTime)
         {
             if (_rb == null || deltaTime <= 0f) return;
@@ -91,6 +103,7 @@ namespace CharacterMotor.Motors
             RaiseStepEvents(in ctx);
         }
 
+        /// <inheritdoc/>
         public override void Teleport(Vector3 worldPosition, bool resetVelocity = true)
         {
             if (_rb != null)
@@ -111,6 +124,9 @@ namespace CharacterMotor.Motors
             }
         }
 
+        /// <summary>
+        /// Performs a downward sphere cast from the configured probe offset to determine walkable grounding and slope normal.
+        /// </summary>
         private void ProbeGround(float maxSlopeAngle, out bool grounded, out Vector3 normal)
         {
             normal = Vector3.up;
@@ -136,6 +152,9 @@ namespace CharacterMotor.Motors
             grounded = false;
         }
 
+        /// <summary>
+        /// Smoothly rotates the rigidbody via <see cref="Rigidbody.MoveRotation"/> toward the active <see cref="CharacterRotationMode"/> target.
+        /// </summary>
         private void UpdateRotation(Vector3 moveWorld, float dt)
         {
             Vector3 desiredForward = Vector3.zero;
@@ -159,6 +178,7 @@ namespace CharacterMotor.Motors
             }
         }
 
+        /// <summary>Reads rigidbody linear velocity using Unity 6's <c>linearVelocity</c> or legacy <c>velocity</c>.</summary>
         private Vector3 GetLinearVelocity()
         {
 #if UNITY_6000_0_OR_NEWER
@@ -168,6 +188,7 @@ namespace CharacterMotor.Motors
 #endif
         }
 
+        /// <summary>Writes rigidbody linear velocity using Unity 6's <c>linearVelocity</c> or legacy <c>velocity</c>.</summary>
         private void SetLinearVelocity(Vector3 value)
         {
 #if UNITY_6000_0_OR_NEWER

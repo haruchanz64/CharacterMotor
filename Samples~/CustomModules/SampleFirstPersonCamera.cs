@@ -21,6 +21,9 @@ namespace CharacterMotor.Samples
         private float _yaw;
         private float _pitch;
 
+        /// <summary>
+        /// Resolves motor, pivot, and input references, assigns the camera pivot as the motor's reference frame, and optionally locks the cursor.
+        /// </summary>
         private void Awake()
         {
             if (motor == null) motor = GetComponent<CharacterMotorBase>();
@@ -40,6 +43,7 @@ namespace CharacterMotor.Samples
             }
         }
 
+        /// <summary>Applies horizontal yaw to the body transform and clamped vertical pitch to the camera pivot.</summary>
         private void LateUpdate()
         {
             if (_inputSource == null) return;

@@ -14,6 +14,9 @@ namespace CharacterMotor.Core
         private bool _orderDirty;
         private Vector3 _pendingImpulse;
 
+        /// <summary>
+        /// Registered modules sorted by <see cref="IMotorModule.ExecutionOrder"/> then <see cref="IMotorModule.ModuleId"/>.
+        /// </summary>
         public IReadOnlyList<IMotorModule> Modules
         {
             get
@@ -23,6 +26,11 @@ namespace CharacterMotor.Core
             }
         }
 
+        /// <summary>
+        /// Registers a module if not already present, marks sort order dirty, and invokes <see cref="IMotorModule.OnAttach"/> when <paramref name="owner"/> is supplied.
+        /// </summary>
+        /// <param name="module">Module to register; ignored when null or already in the pipeline.</param>
+        /// <param name="owner">Optional owning motor passed to <see cref="IMotorModule.OnAttach"/>.</param>
         public void AddModule(IMotorModule module, ICharacterMotor owner = null)
         {
             if (module == null || _modules.Contains(module)) return;
@@ -34,6 +42,12 @@ namespace CharacterMotor.Core
             }
         }
 
+        /// <summary>
+        /// Removes a registered module and invokes <see cref="IMotorModule.OnDetach"/> when <paramref name="owner"/> is supplied.
+        /// </summary>
+        /// <param name="module">Module instance to remove.</param>
+        /// <param name="owner">Optional owning motor passed to <see cref="IMotorModule.OnDetach"/>.</param>
+        /// <returns>True if the module was found and removed; otherwise false.</returns>
         public bool RemoveModule(IMotorModule module, ICharacterMotor owner = null)
         {
             if (module == null) return false;
@@ -48,6 +62,10 @@ namespace CharacterMotor.Core
             return false;
         }
 
+        /// <summary>
+        /// Detaches and removes all registered modules in reverse order.
+        /// </summary>
+        /// <param name="owner">Optional owning motor passed to each module's <see cref="IMotorModule.OnDetach"/>.</param>
         public void ClearModules(ICharacterMotor owner = null)
         {
             if (owner != null)
@@ -61,6 +79,11 @@ namespace CharacterMotor.Core
             _orderDirty = false;
         }
 
+        /// <summary>
+        /// Returns the first registered module assignable to <typeparamref name="T"/>, or null if none exists.
+        /// </summary>
+        /// <typeparam name="T">Concrete or interface module type to locate.</typeparam>
+        /// <returns>The matching module, or null.</returns>
         public T GetModule<T>() where T : class, IMotorModule
         {
             for (int i = 0; i < _modules.Count; i++)
@@ -73,16 +96,28 @@ namespace CharacterMotor.Core
             return null;
         }
 
+        /// <summary>
+        /// Accumulates an additive velocity impulse applied at the end of the next <see cref="SolveVelocity"/> call.
+        /// </summary>
+        /// <param name="impulse">Velocity delta in world units per second.</param>
         public void QueueImpulse(Vector3 impulse)
         {
             _pendingImpulse += impulse;
         }
 
+        /// <summary>
+        /// Discards any queued velocity impulses before they are applied.
+        /// </summary>
         public void ClearPendingImpulse()
         {
             _pendingImpulse = Vector3.zero;
         }
 
+        /// <summary>
+        /// Runs the four-stage velocity solve for one step: <see cref="IMotorModule.BeforeVelocitySolve"/>,
+        /// base locomotion/jump/gravity, <see cref="IMotorModule.ModifyVelocity"/>, and queued impulses.
+        /// </summary>
+        /// <param name="ctx">Per-step context populated by the backend; updated with <see cref="MotorContext.DesiredVelocity"/> and jump flags.</param>
         public void SolveVelocity(ref MotorContext ctx)
         {
             EnsureSorted();
@@ -150,6 +185,10 @@ namespace CharacterMotor.Core
             }
         }
 
+        /// <summary>
+        /// Invokes <see cref="IMotorModule.AfterMove"/> on all enabled modules in execution order after the backend finishes moving.
+        /// </summary>
+        /// <param name="ctx">Post-move context containing the updated <see cref="MotorContext.State"/>.</param>
         public void NotifyAfterMove(ref MotorContext ctx)
         {
             EnsureSorted();
@@ -163,6 +202,10 @@ namespace CharacterMotor.Core
             }
         }
 
+        /// <summary>
+        /// Integrates horizontal or planar acceleration and deceleration into <see cref="MotorContext.DesiredVelocity"/>
+        /// for 2D top-down, 2D platformer, or 3D XZ locomotion.
+        /// </summary>
         private static void SolveBaseMovement(ref MotorContext ctx)
         {
             float dt = Mathf.Max(0f, ctx.DeltaTime);
@@ -204,6 +247,9 @@ namespace CharacterMotor.Core
             ctx.DesiredVelocity.z = nextPlanar.z;
         }
 
+        /// <summary>
+        /// Lazily sorts registered modules by <see cref="IMotorModule.ExecutionOrder"/> with ordinal <see cref="IMotorModule.ModuleId"/> tie-breaking.
+        /// </summary>
         private void EnsureSorted()
         {
             if (!_orderDirty) return;

@@ -11,6 +11,10 @@ namespace CharacterMotor.Samples
         [SerializeField] private int sprintActionBit = 0;
         [SerializeField, Min(1f)] private float speedMultiplier = 1.45f;
 
+        /// <summary>
+        /// Scales planar or horizontal <see cref="MotorContext.DesiredVelocity"/> by <c>speedMultiplier</c> while <c>sprintActionBit</c> is active.
+        /// </summary>
+        /// <param name="ctx">Per-step locomotion context.</param>
         public override void ModifyVelocity(ref MotorContext ctx)
         {
             if (!ctx.Input.HasAction(sprintActionBit)) return;

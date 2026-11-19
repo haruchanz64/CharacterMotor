@@ -7,12 +7,19 @@ namespace CharacterMotor.Core
     /// </summary>
     public struct MotorContext
     {
+        /// <summary>Elapsed step duration in seconds (Update deltaTime or FixedUpdate fixedDeltaTime).</summary>
         public float DeltaTime;
+        /// <summary>Physics dimension of the active motor backend.</summary>
         public MotorDimension Dimension;
+        /// <summary>True when running <see cref="Motor2DMode.TopDown"/> with gravity and jumping disabled.</summary>
         public bool IsTopDown2D;
+        /// <summary>Input snapshot consumed for this step.</summary>
         public MotorInput Input;
+        /// <summary>Directional input projected into world space by the active reference frame.</summary>
         public Vector3 MoveDirectionWorld;
+        /// <summary>Locomotion state captured before solving and refreshed after movement completes.</summary>
         public MotorState State;
+        /// <summary>Active locomotion settings for this step.</summary>
         public MotorSettings Settings;
 
         /// <summary>Velocity solved during this tick and applied by the physics backend.</summary>

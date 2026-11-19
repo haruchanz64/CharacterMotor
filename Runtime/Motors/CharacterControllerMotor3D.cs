@@ -18,9 +18,13 @@ namespace CharacterMotor.Motors
 
         private UnityEngine.CharacterController _controller;
 
+        /// <inheritdoc/>
         public override MotorDimension Dimension => MotorDimension.Mode3D;
+
+        /// <summary>Underlying Unity <see cref="UnityEngine.CharacterController"/> driven by this motor.</summary>
         public UnityEngine.CharacterController Controller => _controller;
 
+        /// <inheritdoc/>
         protected override void Awake()
         {
             _controller = GetComponent<UnityEngine.CharacterController>();
@@ -36,6 +40,11 @@ namespace CharacterMotor.Motors
             Step(Time.deltaTime);
         }
 
+        /// <summary>
+        /// Executes one locomotion tick: probes ground, consumes input, solves velocity through <see cref="CharacterMotorBase.Pipeline"/>,
+        /// moves the <see cref="UnityEngine.CharacterController"/>, updates rotation, and raises post-move callbacks.
+        /// </summary>
+        /// <param name="deltaTime">Step duration in seconds; non-positive values are ignored.</param>
         public void Step(float deltaTime)
         {
             if (_controller == null || deltaTime <= 0f) return;
@@ -68,6 +77,7 @@ namespace CharacterMotor.Motors
 
             if ((flags & CollisionFlags.Above) != 0 && ctx.DesiredVelocity.y > 0f)
             {
+                // Cancel upward velocity on ceiling impact so the character does not stick to overhead geometry.
                 ctx.DesiredVelocity.y = 0f;
             }
 
@@ -81,10 +91,12 @@ namespace CharacterMotor.Motors
             RaiseStepEvents(in ctx);
         }
 
+        /// <inheritdoc/>
         public override void Teleport(Vector3 worldPosition, bool resetVelocity = true)
         {
             if (_controller != null)
             {
+                // CharacterController caches transform position internally and can revert direct assignments while enabled.
                 bool wasEnabled = _controller.enabled;
                 _controller.enabled = false;
                 transform.position = worldPosition;
@@ -103,6 +115,10 @@ namespace CharacterMotor.Motors
             }
         }
 
+        /// <summary>
+        /// Casts a sphere below the capsule bottom to detect walkable ground and surface normals,
+        /// falling back to <see cref="UnityEngine.CharacterController.isGrounded"/> when the cast misses.
+        /// </summary>
         private void ProbeGround(float maxSlopeAngle, out bool grounded, out Vector3 normal)
         {
             normal = Vector3.up;
@@ -131,6 +147,9 @@ namespace CharacterMotor.Motors
             grounded = _controller.isGrounded;
         }
 
+        /// <summary>
+        /// Smoothly rotates the transform toward the active <see cref="CharacterRotationMode"/> target using exponential damping.
+        /// </summary>
         private void UpdateRotation(Vector3 moveWorld, float dt)
         {
             Vector3 desiredForward = Vector3.zero;

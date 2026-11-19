@@ -18,6 +18,11 @@ namespace CharacterMotor.Samples
         private float _cooldownRemaining;
         private Vector3 _dashDirection;
 
+        /// <summary>
+        /// Updates dash timers, starts a dash along move or facing direction when the configured action bit fires,
+        /// and suppresses base movement and gravity while dashing.
+        /// </summary>
+        /// <param name="ctx">Per-step locomotion context.</param>
         public override void BeforeVelocitySolve(ref MotorContext ctx)
         {
             if (_cooldownRemaining > 0f) _cooldownRemaining -= ctx.DeltaTime;
@@ -42,6 +47,10 @@ namespace CharacterMotor.Samples
             }
         }
 
+        /// <summary>
+        /// Overrides <see cref="MotorContext.DesiredVelocity"/> with the locked dash direction and speed while a dash is active.
+        /// </summary>
+        /// <param name="ctx">Per-step locomotion context.</param>
         public override void ModifyVelocity(ref MotorContext ctx)
         {
             if (_dashRemaining > 0f)

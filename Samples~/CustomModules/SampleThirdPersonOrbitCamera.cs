@@ -21,6 +21,7 @@ namespace CharacterMotor.Samples
         private float _yaw;
         private float _pitch = 15f;
 
+        /// <summary>Binds this camera transform as the motor's movement reference frame and caches its input source.</summary>
         private void Start()
         {
             if (motor != null)
@@ -31,6 +32,7 @@ namespace CharacterMotor.Samples
             _yaw = transform.eulerAngles.y;
         }
 
+        /// <summary>Updates orbit yaw/pitch from look input and positions the camera behind the target pivot.</summary>
         private void LateUpdate()
         {
             if (motor == null) return;

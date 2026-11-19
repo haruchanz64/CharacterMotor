@@ -30,6 +30,7 @@ namespace CharacterMotor.InputSystemBridge
 
         private void Update()
         {
+            // Latch jump presses in Update so FixedUpdate-driven Rigidbody motors never miss a single-frame press.
             if (jumpAction != null && jumpAction.action != null)
             {
                 if (jumpAction.action.WasPressedThisFrame()) _jumpQueued = true;
@@ -40,6 +41,11 @@ namespace CharacterMotor.InputSystemBridge
             }
         }
 
+        /// <summary>
+        /// Reads assigned <see cref="InputActionReference"/> actions (or falls back to WASD, arrows, Space, Mouse delta,
+        /// Left Shift for action 0, and Left Ctrl for action 1) and consumes any latched jump press.
+        /// </summary>
+        /// <returns>The current <see cref="MotorInput"/> snapshot.</returns>
         public MotorInput ReadInput()
         {
             var input = MotorInput.Empty;

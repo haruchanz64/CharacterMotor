@@ -13,6 +13,11 @@ namespace CharacterMotor.Samples
 
         private float _bufferRemaining;
 
+        /// <summary>
+        /// Tracks jump buffer countdown and triggers a jump (suppressing base jump) while grounded
+        /// or within <c>coyoteTime</c> seconds after leaving ground.
+        /// </summary>
+        /// <param name="ctx">Per-step locomotion context.</param>
         public override void BeforeVelocitySolve(ref MotorContext ctx)
         {
             if (ctx.Input.JumpPressed)

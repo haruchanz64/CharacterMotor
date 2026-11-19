@@ -5,8 +5,12 @@ using UnityEngine;
 
 namespace CharacterMotor.Editor.Utilities
 {
+    /// <summary>
+    /// Hierarchy creation menu items under <c>GameObject/CharacterMotor</c> for spawning preconfigured 2D and 3D motor rigs.
+    /// </summary>
     public static class CharacterMotorMenuItems
     {
+        /// <summary>Creates a 3D GameObject with a configured <see cref="UnityEngine.CharacterController"/> and <see cref="CharacterControllerMotor3D"/>.</summary>
         [MenuItem("GameObject/CharacterMotor/3D CharacterController Rig", false, 10)]
         private static void Create3DCharacterControllerRig(MenuCommand command)
         {
@@ -20,6 +24,7 @@ namespace CharacterMotor.Editor.Utilities
             FinalizeRig(go);
         }
 
+        /// <summary>Creates a 3D GameObject with a <see cref="CapsuleCollider"/>, interpolated <see cref="Rigidbody"/>, and <see cref="RigidbodyMotor3D"/>.</summary>
         [MenuItem("GameObject/CharacterMotor/3D Rigidbody Rig", false, 11)]
         private static void Create3DRigidbodyRig(MenuCommand command)
         {
@@ -37,6 +42,7 @@ namespace CharacterMotor.Editor.Utilities
             FinalizeRig(go);
         }
 
+        /// <summary>Creates a 2D side-scrolling GameObject with a <see cref="BoxCollider2D"/>, <see cref="Rigidbody2D"/>, and platformer <see cref="RigidbodyMotor2D"/>.</summary>
         [MenuItem("GameObject/CharacterMotor/2D Platformer Rig (Rigidbody2D)", false, 12)]
         private static void Create2DPlatformerRig(MenuCommand command)
         {
@@ -53,6 +59,7 @@ namespace CharacterMotor.Editor.Utilities
             FinalizeRig(go);
         }
 
+        /// <summary>Creates a 2D top-down GameObject with a <see cref="CircleCollider2D"/>, <see cref="Rigidbody2D"/>, and top-down <see cref="RigidbodyMotor2D"/>.</summary>
         [MenuItem("GameObject/CharacterMotor/2D Top-Down Rig (Rigidbody2D)", false, 13)]
         private static void Create2DTopDownRig(MenuCommand command)
         {
@@ -69,6 +76,7 @@ namespace CharacterMotor.Editor.Utilities
             FinalizeRig(go);
         }
 
+        /// <summary>Registers Undo history for the newly created rig and selects it in the Hierarchy.</summary>
         private static void FinalizeRig(GameObject go)
         {
             Undo.RegisterCreatedObjectUndo(go, $"Create {go.name}");

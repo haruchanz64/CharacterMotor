@@ -19,14 +19,20 @@ namespace CharacterMotor.Motors
 
         private Rigidbody2D _rb2d;
 
+        /// <inheritdoc/>
         public override MotorDimension Dimension => MotorDimension.Mode2D;
+
+        /// <summary>Active 2D locomotion mode (side-scrolling <see cref="Motor2DMode.Platformer"/> or <see cref="Motor2DMode.TopDown"/>).</summary>
         public Motor2DMode Mode
         {
             get => mode;
             set => mode = value;
         }
+
+        /// <summary>Underlying Unity <see cref="Rigidbody2D"/> driven by this motor.</summary>
         public Rigidbody2D Body2D => _rb2d;
 
+        /// <inheritdoc/>
         protected override MotorSettings GetDefaultSettings()
         {
             return mode == Motor2DMode.TopDown
@@ -34,6 +40,10 @@ namespace CharacterMotor.Motors
                 : MotorSettings.DefaultPlatformer2D;
         }
 
+        /// <summary>
+        /// Caches the <see cref="Rigidbody2D"/>, zeroes its gravity scale and freezes Z rotation so the motor owns both,
+        /// and initializes base state.
+        /// </summary>
         protected override void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();
@@ -51,6 +61,11 @@ namespace CharacterMotor.Motors
             Step(Time.fixedDeltaTime);
         }
 
+        /// <summary>
+        /// Executes one 2D physics step: probes ground in platformer mode (always grounded in top-down mode),
+        /// solves velocity via <see cref="CharacterMotorBase.Pipeline"/>, applies linear velocity, updates horizontal facing, and raises step events.
+        /// </summary>
+        /// <param name="deltaTime">Step duration in seconds (typically <see cref="Time.fixedDeltaTime"/>); non-positive values are ignored.</param>
         public void Step(float deltaTime)
         {
             if (_rb2d == null || deltaTime <= 0f) return;
@@ -102,6 +117,7 @@ namespace CharacterMotor.Motors
             RaiseStepEvents(in ctx);
         }
 
+        /// <inheritdoc/>
         public override void Teleport(Vector3 worldPosition, bool resetVelocity = true)
         {
             if (_rb2d != null)
@@ -122,6 +138,10 @@ namespace CharacterMotor.Motors
             }
         }
 
+        /// <summary>
+        /// Performs a downward 2D box cast beneath the body, ignoring triggers and the body's own collider,
+        /// to determine walkable platformer grounding and surface normal.
+        /// </summary>
         private void ProbeGround2D(float maxSlopeAngle, out bool grounded, out Vector2 normal)
         {
             normal = Vector2.up;
@@ -141,6 +161,7 @@ namespace CharacterMotor.Motors
             grounded = false;
         }
 
+        /// <summary>Reads 2D rigidbody linear velocity using Unity 6's <c>linearVelocity</c> or legacy <c>velocity</c>.</summary>
         private Vector2 GetLinearVelocity2D()
         {
 #if UNITY_6000_0_OR_NEWER
@@ -150,6 +171,7 @@ namespace CharacterMotor.Motors
 #endif
         }
 
+        /// <summary>Writes 2D rigidbody linear velocity using Unity 6's <c>linearVelocity</c> or legacy <c>velocity</c>.</summary>
         private void SetLinearVelocity2D(Vector2 value)
         {
 #if UNITY_6000_0_OR_NEWER

@@ -9,12 +9,20 @@ using UnityEngine.UIElements;
 
 namespace CharacterMotor.Editor.Inspectors
 {
+    /// <summary>
+    /// UI Toolkit custom inspector for <see cref="CharacterMotorBase"/> subclasses,
+    /// rendering default serialized fields alongside a live <see cref="IMotorModule"/> pipeline summary and runtime telemetry.
+    /// </summary>
     [CustomEditor(typeof(CharacterMotorBase), true)]
     public sealed class CharacterMotorInspector : UnityEditor.Editor
     {
         private VisualElement _moduleList;
         private Label _runtimeStateLabel;
 
+        /// <summary>
+        /// Builds the UI Toolkit inspector hierarchy and schedules a 150 ms polling loop to refresh module status and runtime state.
+        /// </summary>
+        /// <returns>The root <see cref="VisualElement"/> for the inspector.</returns>
         public override VisualElement CreateInspectorGUI()
         {
             var root = new VisualElement();
@@ -48,6 +56,9 @@ namespace CharacterMotor.Editor.Inspectors
             return root;
         }
 
+        /// <summary>
+        /// Rebuilds the attached module rows and updates velocity, grounding, slope, and air-time readout.
+        /// </summary>
         private void RefreshSummary()
         {
             if (target == null || _moduleList == null) return;
@@ -93,6 +104,10 @@ namespace CharacterMotor.Editor.Inspectors
             }
         }
 
+        /// <summary>
+        /// Collects sorted modules for display: reads live pipeline modules in Play Mode,
+        /// or scans sibling <see cref="MonoBehaviour"/> components implementing <see cref="IMotorModule"/> in Edit Mode.
+        /// </summary>
         private static List<IMotorModule> CollectModulesForPreview(CharacterMotorBase motor)
         {
             var result = new List<IMotorModule>();
@@ -112,6 +127,11 @@ namespace CharacterMotor.Editor.Inspectors
             return result;
         }
 
+        /// <summary>
+        /// Loads <c>CharacterMotorStyles.uss</c> from the package path (falling back to an AssetDatabase search)
+        /// and attaches it to <paramref name="target"/>.
+        /// </summary>
+        /// <param name="target">VisualElement to receive the stylesheet.</param>
         internal static void AttachStyles(VisualElement target)
         {
             const string pkgPath = "Packages/com.haruchanz64.character-motor/Editor/UI/CharacterMotorStyles.uss";
